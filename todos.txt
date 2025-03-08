@@ -1,0 +1,75 @@
+todos:
+
+Figure out how to annotate and export an annotated .npy (or something compatible with training, Dragonfly or otherwise)
+
+1. Find best plugins for annotating (if any better than default)
+-- Options:
+    1. napari-annotator (can't load, maybe change pyqt5 to pyside2?)
+    2. napari-nd-annotator
+        *** The napari-nd-annotator only runs on napari versions  0.4.15 and 0.4.16!
+    will investigate both of these when i am back on prem and can load conda faster
+
+2. DONE - Find best export format
+    1. DONE - .ny is ideal
+    
+3. DONE - Be able to re-open annotated .npy and see additions as new colors
+        Can open as "Image" and convert to Layer in UI, and that renders annotations correctly
+            Opening as "Layer" in code changes the colors (and maybe annotation data)
+        Should read documentation if we need to improve this
+        Streamlining UI may also help
+        Works fine. Removed "label" functions that I blindly copied from examples
+
+4. DONE - Built GUI Widgets for importing part_id Label layers and exporting .npy files with "..._Annotated" name
+    Done - Hopefully I can save the original filename as an attribute of the Napari Label layer
+    Also added a way to check progress in editting and exporting
+
+
+
+
+
+DONE 1->6. How to view a Core 3D image file in Napari on an operator PC/tablet
+
+1. DONE - Learn which type of Core 3D images can be used with the Napari viewer, and how
+    - Need help from team
+2. DONE - learn how to widget
+3. IN PROGRESS - Tablet navigation
+    DONE:
+        Zoom scrollbar widget
+    Stretch:
+        Pan up and down, left and right
+4. DONE - How to create a new image layer from a widget button
+5. IN PROGRESS - Scan barcodes to know which part_id image layer to import
+    DONE:
+        How to choose a part_id barcode from WIP for new layer
+    Stretch: 
+        Need to clear textbox after part_id 3D image is added
+        Refresh list while app is still open?
+6. DONE - Decide Whether to deploy via pysintaller.exe or to shared program on ply-fp-11
+    ply-fp-11   
+        - Pros
+            easier to updates
+            shorter to deploy
+        - Cons
+            slow conda deployment (need to investigate this. Activate remote conda env / py venv on ply-fp-11?)
+                This it totally possible, tested on ply-db-11
+                WORKING (see run_napari.bat), but slow to open, pulling in hundreds of MBs of dependencies each run 
+                Need to test on Poly6 WiFi
+            security concerns (likely solved with permissions)
+    pyinstaller
+        - Pros
+            faster to run
+            safer to rollout staged updates
+        - Cons
+            I can't get it to work (confusing and unlikely to be solved)
+            larger filesize
+            longer updates/deployments
+
+    ...bc ply-fp-11 was too slow, and pyinstaller didn't work...
+
+    compromise
+        1. Create a local conda env with all the dependencies installed 
+        2. Call python stored remotely
+
+        Hopefully this gives both benefits
+
+

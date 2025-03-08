@@ -1,0 +1,26 @@
+
+
+to zoom from console:
+>>> viewer.camera.zoom = new zoom level
+
+to set default brush size:
+>>> list(viewer.window._qt_viewer.controls.widgets)[-1].brush_size = 1
+
+Running 
+>>> viewer.add_labels(labeled, name='my_core')
+make all continuous bodies show the same color, even when their values are different
+
+In Napari, right-clicking an image layer and hitting "Convert to Labels" gives correct color
+How can I do that programatically and at image load?
+Also wtf is a label layer? I should read the article
+
+
+Create a napari viewer using just label
+>>> viewer = napari.view_labels(labeled)
+
+
+Get active layer (for exporting?)
+>>> active_layer = viewer.layers.selection.active
+
+
+21249-072B_INFERENCE_no_air
