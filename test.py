@@ -10,50 +10,48 @@ nar = np.load(in_name)
 
 # @njit(parallel=True)
 def main(nar, in_name):
-    og_nar = np.copy(nar)
-    og_void_nar = np.copy(nar)
-    out_name = in_name.replace('.npy', '_wo_Voids.npy')
-    out_name_2 = in_name.replace('.npy', '_just_Dilated_Voids.npy')
-    out_name_3 = in_name.replace('.npy', '_just_OG_Voids.npy')
+    og_nar =        np.copy(nar)
+    og_void_nar =   np.copy(nar)
+    out_name_wo_Voids =      in_name.replace('.npy', '_wo_Voids.npy')
+    out_name_just_dilated_voids =    in_name.replace('.npy', '_just_Dilated_Voids.npy')
+    out_name_just_og_voids =    in_name.replace('.npy', '_just_OG_Voids.npy')
 
+    # 1) Make nparray binary and send through Erosion and Dilation
+    # This will become the Dilated Void layer
+    print(np.unique(nar))
+    nar[nar == 1] = 0 # No Core
+    # nar[nar == 3] = 1 # Replace Void w/ 1 # nvm, as long as there are only 2 values the next step is fine
+
+    strel_size = 3
+    strel = np.ones((strel_size, strel_size, strel_size))
+    nar = pg.gen.dilate(nar, strel)
+    strel_size = 6
+    strel = np.ones((strel_size, strel_size, strel_size))
+    nar = pg.gen.erode(nar, strel)
+    strel_size = 3
+    strel = np.ones((strel_size, strel_size, strel_size))
+    nar = pg.gen.dilate(nar, strel)
+
+    nar -= 1 # Erosion and Dilation increment the values for some dumn reason
+    print(np.unique(nar))
+
+
+
+    # 2) Remove all Void data from original Core layer
     og_void_nar[og_void_nar == 1] = 0
 
 
-    nar[nar == 1] = 0 # No Core
-    nar[nar == 3] = 1 # Replace Void w/ 1
-
-    # print(np.unique(nar))
-    strel_size = 11
-    strel = np.ones((strel_size, strel_size, strel_size))
-    nar = pg.gen.dilate(nar, strel)
-    strel_size = 12
-    strel = np.ones((strel_size, strel_size, strel_size))
-    nar = pg.gen.erode(nar, strel)
-    strel_size = 1
-    strel = np.ones((strel_size, strel_size, strel_size))
-    nar = pg.gen.dilate(nar, strel)
-
-    # print(np.unique(nar))
-
-    nar[nar == 1] = 0 # Null
-    nar[nar == 2] = 3 # Void
-
-
+    # 3) Create layer of original Void
     og_nar[og_nar == 3] = 1 # replace OG Void with Core
-    
-    # og_nar[nar == 3] = 3 # Void
 
+    
+    with open(out_name_just_dilated_voids, 'wb+') as out_f:
+        np.save(out_name_just_dilated_voids, nar)
 
-    print(f'{out_name=}')
-    with open(out_name, 'wb+') as out_f:
-        np.save(out_name, og_nar)
+    with open(out_name_wo_Voids, 'wb+') as out_f:
+        np.save(out_name_wo_Voids, og_nar)
     
-    print(f'{out_name_2=}')
-    with open(out_name_2, 'wb+') as out_f:
-        np.save(out_name_2, nar)
-    
-    print(f'{out_name_3=}')
-    with open(out_name_3, 'wb+') as out_f:
-        np.save(out_name_3, og_void_nar)
+    with open(out_name_just_og_voids, 'wb+') as out_f:
+        np.save(out_name_just_og_voids, og_void_nar)
         
 main(nar, in_name)
