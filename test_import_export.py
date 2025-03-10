@@ -39,7 +39,7 @@ def mark_layer_as_editted(event):
 )
 def add_core_image(
     Instructions:   str = 'Scan barcode',
-    part_id:        str = 'SR-24417_PN-9341028G_SN-25000-008A_INFERENCE_No_Air_just_Dilated_Voids' # TESTING ''
+    part_id:        str = 'SR-24417_PN-9341028G_SN-25000-008A_INFERENCE_just_Dilated_Voids' # TESTING ''
 ):
     first_nar_path = list(data_path.glob(f"*{part_id}*.npy"))[0]
     nar_unreduced = np.load(first_nar_path).astype(np.uint8)
